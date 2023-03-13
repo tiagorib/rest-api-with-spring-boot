@@ -55,7 +55,7 @@ public class Calculator {
     }
 
     private Double squareRoot() {
-        return this.getNumberOne() * this.getNumberOne();
+        return Math.sqrt(this.getNumberOne());
     }
 
 }
