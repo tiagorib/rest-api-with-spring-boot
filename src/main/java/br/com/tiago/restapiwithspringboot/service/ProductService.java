@@ -24,16 +24,13 @@ public class ProductService {
     }
 
     public Product saveProduct(Product product) {
-
-        if (product.getAmountProduct() != null &&
-                product.getAmountProduct().compareTo(BigDecimal.valueOf(0)) == 1 &&
-                product.getCostPriceProduct() != null &&
-                product.getCostPriceProduct().compareTo(BigDecimal.valueOf(0)) == 1) {
+        if (validateProduct(product)) {
             return productRepository.save(product);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O preço de custo e preço de venda do produto são obrigatórios e devem ser maiores que 0 (zero)!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "O preço de custo e preço de venda do produto são " +
+                            "obrigatórios e devem ser maiores que 0 (zero)!");
         }
-
     }
 
     public HashMap<String, Object> deleteProduct(Long productId) {
@@ -56,15 +53,23 @@ public class ProductService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O ID do produto é obrigatório na atualização!");
         }
 
-        if (product.getAmountProduct() != null &&
-                product.getAmountProduct().compareTo(BigDecimal.valueOf(0)) == 1 &&
-                product.getCostPriceProduct() != null &&
-                product.getCostPriceProduct().compareTo(BigDecimal.valueOf(0)) == 1) {
+        if (validateProduct(product)) {
             return productRepository.saveAndFlush(product);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O preço de custo e preço de venda do produto são obrigatórios e devem ser maiores que 0 (zero)!");
         }
 
+    }
+
+    public Boolean validateProduct (Product product) {
+        if (product.getAmountProduct() != null &&
+                product.getAmountProduct().compareTo(BigDecimal.valueOf(0)) == 1 &&
+                product.getCostPriceProduct() != null &&
+                product.getCostPriceProduct().compareTo(BigDecimal.valueOf(0)) == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
