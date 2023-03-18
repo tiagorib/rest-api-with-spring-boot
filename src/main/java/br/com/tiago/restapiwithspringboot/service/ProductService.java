@@ -25,7 +25,7 @@ public class ProductService {
 
     public Product saveProduct(Product product) {
         if (validateProduct(product)) {
-            return productRepository.save(product);
+            return productRepository.saveAndFlush(product);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "O preço de custo e preço de venda do produto são " +
@@ -34,7 +34,10 @@ public class ProductService {
     }
 
     public HashMap<String, Object> deleteProduct(Long productId) {
-        Optional<Product> product = Optional.ofNullable(productRepository.findById(productId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!")));
+        Optional<Product> product =
+                Optional.ofNullable(productRepository.findById(productId).
+                        orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                "Produto não encontrado!")));
 
         productRepository.delete(product.get());
         HashMap<String, Object> result = new  HashMap<String, Object> ();
@@ -44,13 +47,15 @@ public class ProductService {
 
     public Product findProductById(Long idProduct){
         return productRepository.findById(idProduct)
-                .orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
+                .orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Produto não encontrado!"));
     }
 
     public Product updateProduct(Product product) {
 
         if (product.getIdProduct() == null || product.getIdProduct() <= 0) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O ID do produto é obrigatório na atualização!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "O ID do produto é obrigatório na atualização!");
         }
 
         if (validateProduct(product)) {
