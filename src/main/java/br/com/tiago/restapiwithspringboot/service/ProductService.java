@@ -59,11 +59,16 @@ public class ProductService {
         }
 
         if (validateProduct(product)) {
-            return productRepository.saveAndFlush(product);
+            if (findProductById(product.getIdProduct()) != null) {
+                return productRepository.saveAndFlush(product);
+            } else {
+                return null;
+            }
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O preço de custo e preço de venda do produto são obrigatórios e devem ser maiores que 0 (zero)!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+            "O preço de custo e preço de venda do produto são obrigatórios " +
+                "e devem ser maiores que 0 (zero)!");
         }
-
     }
 
     public Boolean validateProduct (Product product) {

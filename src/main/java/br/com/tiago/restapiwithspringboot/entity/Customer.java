@@ -9,7 +9,7 @@ public class Customer {
     private String firstNameCustomer;
     private String lastNameCustomer;
     private String cpfCustomer;
-    private LocalDate birthDateCustomer;
+    private LocalDate birthdateCustomer;
     private LocalDate dateCreatedCustomer;
     private BigDecimal monthlyIncomeCustomer;
     private Boolean statusCustomer;
