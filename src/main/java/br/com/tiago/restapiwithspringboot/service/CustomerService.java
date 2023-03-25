@@ -24,7 +24,7 @@ public class CustomerService {
         if (validateCustomer(customer)) {
             return customerRepository.saveAndFlush(customer);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Há campos do cliente que estão em branco");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Há campos do cliente que estão em branco ou preenchidos de forma incorreta");
         }
     }
 
@@ -60,7 +60,7 @@ public class CustomerService {
                 return null;
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Há campos do cliente que estão em branco");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Há campos do cliente que estão em branco ou preenchidos de forma incorreta");
         }
     }
 
@@ -69,6 +69,7 @@ public class CustomerService {
                 customer.getLastNameCustomer() != null &&
                 customer.getCpfCustomer() != null &&
                 customer.getBirthdateCustomer() != null &&
+                customer.getMonthlyIncomeCustomer() != null &&
                 customer.getMonthlyIncomeCustomer().compareTo(BigDecimal.valueOf(0)) == 1 &&
                 customer.getStatusCustomer() != null &&
                 customer.getEmailCustomer() != null &&
