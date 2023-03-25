@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -26,7 +27,8 @@ public class Customer {
     @Column(name = "last_name_customer", nullable = false, length = 300)
     private String lastNameCustomer;
 
-    @Column(name = "cpf_customer", unique = true, nullable = false, length = 11)
+    @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}$", message = "CPF inválido")
+    @Column(name = "cpf_customer", unique = true, nullable = false, length = 14)
     private String cpfCustomer;
 
     @Column(name = "birth_date_customer", nullable = false)
@@ -43,6 +45,7 @@ public class Customer {
     @Column(name = "status_customer", nullable = false)
     private Boolean statusCustomer;
 
+    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "E-mail inválido")
     @Column(name = "email_customer", nullable = false)
     private String emailCustomer;
 
