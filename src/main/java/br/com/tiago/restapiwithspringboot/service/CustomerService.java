@@ -1,7 +1,6 @@
 package br.com.tiago.restapiwithspringboot.service;
 
 import br.com.tiago.restapiwithspringboot.entity.Customer;
-import br.com.tiago.restapiwithspringboot.entity.Product;
 import br.com.tiago.restapiwithspringboot.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,8 +27,7 @@ public class CustomerService {
             return customerRepository.saveAndFlush(customer);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "O preço de custo e preço de venda do produto são " +
-                            "obrigatórios e devem ser maiores que 0 (zero)!");
+                    "o Ganho mensal é obrigatório!");
         }
     }
 
@@ -51,7 +49,7 @@ public class CustomerService {
                         "Customer não encontrado!"));
     }
 
-    public Customer updateProduct(Customer customer) {
+    public Customer updateCustomer(Customer customer) {
 
         if (customer.getIdCustomer() == null || customer.getIdCustomer() <= 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -66,14 +64,14 @@ public class CustomerService {
             }
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-            "O preço de custo e preço de venda do produto são obrigatórios " +
-                "e devem ser maiores que 0 (zero)!");
+            "O ganho mensal é obrigatório!");
         }
     }
 
     public Boolean validateCustomer (Customer customer) {
         if (customer.getMonthlyIncomeCustomer() != null &&
-                customer.getMonthlyIncomeCustomer().compareTo(BigDecimal.valueOf(0)) == 1) {
+                customer.getMonthlyIncomeCustomer().compareTo(BigDecimal.valueOf(0)) == 1 &&
+        customer.getStatusCustomer()!=false) {
             return true;
         } else {
             return false;
