@@ -35,8 +35,8 @@ public class CustomerController {
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
 
-    @GetMapping(value = "/findCustomer/{idCustomer}")
-    public ResponseEntity<Object> findCustomerById(@PathVariable Long idCustomer){
+    @GetMapping(value = "/findProduct/{idCustomer}")
+    public ResponseEntity<Object> getCustomerById(@PathVariable Long idCustomer){
         Customer result = customerService.findCustomerById(idCustomer);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
@@ -48,7 +48,7 @@ public class CustomerController {
 
     @PutMapping(value = "/update")
     public ResponseEntity<Object> updateCustomer(@RequestBody Customer customer) {
-        Customer result = customerService.updateCustomer(customer);
+        Customer result = customerService.updateProduct(customer);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
 
