@@ -40,7 +40,11 @@ public class CustomerController {
         Customer result = customerService.findCustomerById(idCustomer);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
-
+    @GetMapping(value = "/listCustomer/{statusCustomer}")
+    public ResponseEntity<Object> findAllCustomerByStatus(@PathVariable Boolean statusCustomer){
+        List<Customer> result = customerService.findAllCustomersByStatus(statusCustomer);
+        return ResponseEntity.ok().body(ResponseGenericException.response(result));
+    }
 
     @PutMapping(value = "/update")
     public ResponseEntity<Object> updateCustomer(@RequestBody Customer customer) {

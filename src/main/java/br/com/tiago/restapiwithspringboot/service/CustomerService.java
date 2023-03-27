@@ -27,7 +27,7 @@ public class CustomerService {
             return customerRepository.saveAndFlush(customer);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "o Ganho mensal é obrigatório!");
+                    "Favor digitar todos os campos!");
         }
     }
 
@@ -48,6 +48,10 @@ public class CustomerService {
                 .orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Customer não encontrado!"));
     }
+    public List<Customer> findAllCustomersByStatus(Boolean statusCustomer) {
+        return customerRepository.findCustomersByStatus(statusCustomer);
+    }
+
 
     public Customer updateCustomer(Customer customer) {
 
@@ -64,14 +68,17 @@ public class CustomerService {
             }
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-            "O ganho mensal é obrigatório!");
+            "Favor digitar todos os campos");
         }
     }
 
     public Boolean validateCustomer (Customer customer) {
-        if (customer.getMonthlyIncomeCustomer() != null &&
+        if (customer.getFirstNameCustomer() != null && customer.getLastNameCustomer() != null &&
+                customer.getCpfCustomer() != null && customer.getBirthdateCustomer() != null &&
+                customer.getMonthlyIncomeCustomer() != null &&
                 customer.getMonthlyIncomeCustomer().compareTo(BigDecimal.valueOf(0)) == 1 &&
-        customer.getStatusCustomer()!=false) {
+                customer.getStatusCustomer() != null && customer.getEmailCustomer() != null &&
+                customer.getPasswordCustomer() != null) {
             return true;
         } else {
             return false;
