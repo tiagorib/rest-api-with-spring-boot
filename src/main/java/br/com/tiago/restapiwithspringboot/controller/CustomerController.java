@@ -1,7 +1,9 @@
 package br.com.tiago.restapiwithspringboot.controller;
 
+import br.com.tiago.restapiwithspringboot.entity.Customer;
 import br.com.tiago.restapiwithspringboot.entity.Product;
 import br.com.tiago.restapiwithspringboot.exception.ResponseGenericException;
+import br.com.tiago.restapiwithspringboot.service.CustomerService;
 import br.com.tiago.restapiwithspringboot.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,40 +13,40 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/product")
+@RequestMapping(value = "/api/customer")
 @CrossOrigin(value = "*")
-public class ProductController {
+public class CustomerController {
 
     @Autowired
-    private ProductService productService;
+    private CustomerService customerService;
 
     @GetMapping(value = "/list")
-    public ResponseEntity<Object> getInfoProducts() {
-        List<Product> result = productService.getInfoProducts();
+    public ResponseEntity<Object> getInfoCustomers() {
+        List<Customer> result = customerService.getInfoCustomers();
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
     @PostMapping(value = "/save")
-    public ResponseEntity<Object> saveProduct(@RequestBody Product product) {
-        Product result = productService.saveProduct(product);
+    public ResponseEntity<Object> saveCustomer(@RequestBody Customer customer) {
+        Customer result = customerService.saveCustomer(customer);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
 
-    @DeleteMapping(value = "/delete/{idProduct}")
-    public ResponseEntity<Object> deleteProduct(@PathVariable Long idProduct) {
-        HashMap<String, Object> result = productService.deleteProduct(idProduct);
+    @DeleteMapping(value = "/delete/{idCustomer}")
+    public ResponseEntity<Object> deleteCustomer(@PathVariable Long idCustomer) {
+        HashMap<String, Object> result = customerService.deleteCustomer(idCustomer);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
 
-    @GetMapping(value = "/findProduct/{idProduct}")
-    public ResponseEntity<Object> getProductById(@PathVariable Long idProduct){
-        Product result = productService.findProductById(idProduct);
+    @GetMapping(value = "/find/{idCustomer}")
+    public ResponseEntity<Object> getCustomerById(@PathVariable Long idCustomer){
+        Customer result = customerService.findCustomerById(idCustomer);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
 
 
     @PutMapping(value = "/update")
-    public ResponseEntity<Object> updateProduct(@RequestBody Product product) {
-        Product result = productService.updateProduct(product);
+    public ResponseEntity<Object> updateCustomer(@RequestBody Customer customer) {
+        Customer result = customerService.updateCustomer(customer);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
 
