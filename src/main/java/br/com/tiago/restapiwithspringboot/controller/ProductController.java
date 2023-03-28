@@ -41,7 +41,6 @@ public class ProductController {
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
 
-
     @PutMapping(value = "/update")
     public ResponseEntity<Object> updateProduct(@RequestBody Product product) {
         Product result = productService.updateProduct(product);
