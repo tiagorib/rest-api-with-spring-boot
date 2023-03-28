@@ -56,4 +56,5 @@ public class Customer {
     @Column(name = "password_customer", nullable = false, length = 10)
     private String passwordCustomer;
 
+
 }
