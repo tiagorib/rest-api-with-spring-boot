@@ -41,7 +41,7 @@ public class Customer {
 
     @Column(name = "date_created_customer", nullable = false, updatable = false)
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private String dateCreatedCustomer;
+    private LocalDate dateCreatedCustomer;
 
     @Column(name = "monthly_income_customer", nullable = false, precision = 10, scale = 2)
     private BigDecimal monthlyIncomeCustomer;
@@ -56,5 +56,8 @@ public class Customer {
     @Column(name = "password_customer", nullable = false, length = 10)
     private String passwordCustomer;
 
-
+    @PrePersist
+    public void prePersist(){
+        setDateCreatedCustomer(LocalDate.now());
+    }
 }
