@@ -69,10 +69,11 @@ public class CustomerService {
     }
 
     public Boolean validateCustomer(Customer product) {
-        if (product.getCpfCustomer() != null) {
+        if (product.getCpf() != null) {
             return true;
         } else {
             return false;
         }
     }
+
 }

@@ -1,116 +1,53 @@
 package br.com.tiago.restapiwithspringboot.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long idCustomer;
+    private Long id;
     @Column(name = "first_name")
-    private String firstNameCustomer;
+    private String firstName;
     @Column(name = "last_name")
-    private String lastNameCustomer;
+    private String lastName;
+    @CPF
     @Column(name = "cpf")
-    private String cpfCustomer;
-    @Column(name = "birthday")
-    private LocalDate birthdateCustomer;
-    @Column(name = "created")
-    private LocalDate dateCreatedCustomer;
+    private String cpf;
+    @Column(name = "birth_date")
+    @JsonFormat(pattern="dd/MM/yyyy")
+    private LocalDate birthDate;
+    @Column(name = "date_create", updatable = false)
+    @JsonFormat(pattern="dd/MM/yyyy")
+    private LocalDate dateCreate;
     @Column(name = "monthly_income")
-    private BigDecimal monthlyIncomeCustomer;
+    private BigDecimal monthlyIncome;
     @Column(name = "status")
-    private Boolean statusCustomer;
+    private Boolean status;
+    @Email
     @Column(name = "email")
-    private String emailCustomer;
+    private String email;
     @Column(name = "password")
-    private String passwordCustomer;
+    private String password;
 
 
-    public Long getIdCustomer() {
-        return idCustomer;
-    }
-
-    public void setIdCustomer(Long idCustomer) {
-        this.idCustomer = idCustomer;
-    }
-
-    public String getFirstNameCustomer() {
-        return firstNameCustomer;
-    }
-
-    public void setFirstNameCustomer(String firstNameCustomer) {
-        this.firstNameCustomer = firstNameCustomer;
-    }
-
-    public String getLastNameCustomer() {
-        return lastNameCustomer;
-    }
-
-    public void setLastNameCustomer(String lastNameCustomer) {
-        this.lastNameCustomer = lastNameCustomer;
-    }
-
-    public String getCpfCustomer() {
-        return cpfCustomer;
-    }
-
-    public void setCpfCustomer(String cpfCustomer) {
-        this.cpfCustomer = cpfCustomer;
-    }
-
-    public LocalDate getBirthdateCustomer() {
-        return birthdateCustomer;
-    }
-
-    public void setBirthdateCustomer(LocalDate birthdateCustomer) {
-        this.birthdateCustomer = birthdateCustomer;
-    }
-
-    public LocalDate getDateCreatedCustomer() {
-        return dateCreatedCustomer;
-    }
-
-    public void setDateCreatedCustomer(LocalDate dateCreatedCustomer) {
-        this.dateCreatedCustomer = dateCreatedCustomer;
-    }
-
-    public BigDecimal getMonthlyIncomeCustomer() {
-        return monthlyIncomeCustomer;
-    }
-
-    public void setMonthlyIncomeCustomer(BigDecimal monthlyIncomeCustomer) {
-        this.monthlyIncomeCustomer = monthlyIncomeCustomer;
-    }
-
-    public Boolean getStatusCustomer() {
-        return statusCustomer;
-    }
-
-    public void setStatusCustomer(Boolean statusCustomer) {
-        this.statusCustomer = statusCustomer;
-    }
-
-    public String getEmailCustomer() {
-        return emailCustomer;
-    }
-
-    public void setEmailCustomer(String emailCustomer) {
-        this.emailCustomer = emailCustomer;
-    }
-
-    public String getPasswordCustomer() {
-        return passwordCustomer;
-    }
-
-    public void setPasswordCustomer(String passwordCustomer) {
-        this.passwordCustomer = passwordCustomer;
+    @PrePersist
+    public void datinha(){
+        setDateCreate(LocalDate.now());
     }
 }
