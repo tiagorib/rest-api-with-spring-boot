@@ -3,11 +3,15 @@ package br.com.tiago.restapiwithspringboot.controller;
 import br.com.tiago.restapiwithspringboot.entity.Customer;
 import br.com.tiago.restapiwithspringboot.exception.ResponseGenericException;
 import br.com.tiago.restapiwithspringboot.service.CustomerService;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.lang.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,9 +25,10 @@ public class CustomerController {
     CustomerService customerService;
 
     @PostMapping(value = "/create")
-    public ResponseEntity<Object> saveCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<Object> saveCustomer(@Valid@RequestBody Customer customer) {
         Customer result = customerService.saveCustomer(customer);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
+
     }
 
     @GetMapping(value = "/list")
@@ -49,6 +54,8 @@ public class CustomerController {
         Customer result = customerService.updateCustomer(customer);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
+
+
 }
 
 

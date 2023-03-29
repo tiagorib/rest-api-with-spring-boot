@@ -1,5 +1,6 @@
 package br.com.tiago.restapiwithspringboot.entity;
 
+import br.com.tiago.restapiwithspringboot.service.CustomerService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class Customer {
     private String firstNameCustomer;
     @Column(name = "last_name_customer", nullable = false, length = 50)
     private String lastNameCustomer;
+    @CustomerService.Cpf
     @Column(name = "cpf_customer", nullable = false, length = 11)
     private String cpfCustomer;
     @Column(name = "birth_date_customer", nullable = false, updatable = false)
