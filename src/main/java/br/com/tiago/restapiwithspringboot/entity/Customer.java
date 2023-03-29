@@ -2,6 +2,7 @@ package br.com.tiago.restapiwithspringboot.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Builde:r
+@Builder
 
 
 public class Customer {
@@ -26,35 +27,43 @@ public class Customer {
     @Column(name = "id_customer")
     private Long idCustomer;
 
-
+    @NotBlank(message = "Preenchimento obrigatório")
     @Column(name = "first_name_customer", nullable = false, length = 100)
     private String firstNameCustomer;
 
+    @NotBlank(message = "Preenchimento obrigatório")
     @Column(name = "last_name_customer", nullable = false, length = 200)
     private String lastNameCustomer;
 
+    @NotBlank(message = "Preenchimento obrigatório")
     @CPF(message = "CPF INVÁLIDO!")
     @Column(name = "cpf_customer", unique = true,  nullable = false, length = 11) //ver caracteristicas pra atributo
     private String cpfCustomer;
 
+    @NotBlank(message = "Preenchimento obrigatório")
     @Email(message = "EMAIL INVÁLIDO")
     @Column(name = "email_customer", nullable = false, length = 100)
     private String emailCustomer;
 
+    @NotBlank(message = "Preenchimento obrigatório")
     @Column(name = "birthdate_customer", nullable = false)
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate birthdateCustomer;
 
+    @NotBlank(message = "Preenchimento obrigatório")
     @Column(name = "date_create_customer", nullable = false, updatable = false)
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateCreatedCustomer;
 
+    @NotBlank(message = "Preenchimento obrigatório")
     @Column(name = "monthly_income_customer", nullable = false, precision = 10, scale = 2)
     private BigDecimal monthlyIncomeCustomer;
 
+    @NotBlank(message = "Preenchimento obrigatório")
     @Column(name = "password_customer", nullable = false, length = 10)
     private String passwordCustomer;
 
+    @NotBlank(message = "Preenchimento obrigatório")
     @Column(name = "status_customer")
     private Boolean statusCustomer;
 
