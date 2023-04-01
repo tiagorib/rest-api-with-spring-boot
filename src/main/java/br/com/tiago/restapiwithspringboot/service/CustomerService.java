@@ -4,6 +4,7 @@ import br.com.tiago.restapiwithspringboot.entity.Customer;
 import br.com.tiago.restapiwithspringboot.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -17,11 +18,15 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private PasswordEncoder encoder;
+
     public List<Customer> getInfoCustomer() {
         return customerRepository.findAll();
     }
 
     public Customer saveCustomer(Customer customer){
+        customer.setPasswordCustomer(encoder.encode(customer.getPasswordCustomer()));
         return customerRepository.saveAndFlush(customer);
     }
 
@@ -36,7 +41,8 @@ public class CustomerService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "O ID do cliente é obrigatório na atualização!");
         }
-            return customerRepository.saveAndFlush(customer);
+        encryptPassword(customer);
+        return customerRepository.saveAndFlush(customer);
     }
 
     public HashMap<String, Object> deleteCustomer(Long idCustomer){
@@ -49,6 +55,14 @@ public class CustomerService {
         result.put("result", "Cliente: " + customer.get().getFirstNameCustomer() + " excluido com sucesso!");
         return result;
 
+    }
+
+    public void encryptPassword (Customer customer) {
+        Optional<Customer> oldOBJ = customerRepository.findById(customer.getIdCustomer());
+
+        if (!customer.getPasswordCustomer().equals(oldOBJ.get().getPasswordCustomer())) {
+            customer.setPasswordCustomer(encoder.encode(customer.getPasswordCustomer()));
+        }
     }
 
 }
