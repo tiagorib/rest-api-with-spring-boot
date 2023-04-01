@@ -2,6 +2,8 @@ package br.com.tiago.restapiwithspringboot.service;
 
 import br.com.tiago.restapiwithspringboot.entity.Customer;
 import br.com.tiago.restapiwithspringboot.repository.CustomerRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,16 +20,16 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public List<Customer> getInfoCustomer(){
+    public List<Customer> getInfoCustomer() {
         return customerRepository.findAll();
     }
 
-    public Customer saveCustomer(Customer customer){
+    public Customer saveCustomer(Customer customer) {
         return customerRepository.saveAndFlush(customer);
     }
 
 
-    public Boolean validateCustomer (Customer customer){
+    public Boolean validateCustomer(Customer customer) {
         if (customer.getFirstNameCustomer() != null &&
                 customer.getLastNameCustomer() != null &&
                 customer.getCpfCustomer() != null &&
@@ -35,21 +37,21 @@ public class CustomerService {
                 customer.getBirthdateCustomer() != null &&
                 customer.getMonthlyIncomeCustomer() != null &&
                 customer.getMonthlyIncomeCustomer().compareTo(BigDecimal.valueOf(0)) == 1 &&
-                customer.getPasswordCustomer() != null &&
-                customer.getStatusCustomer() != null) {
+                customer.getStatusCustomer() != null &&
+                !customer.getPasswordCustomer().equals("")){
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
-    public Customer findCustomerById(Long idCustomer){
+    public Customer findCustomerById(Long idCustomer) {
         return customerRepository.findById(idCustomer)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Customer não encontrado"));
     }
 
-    public HashMap<String, Object> deleteCustomer(Long customerId){
+    public HashMap<String, Object> deleteCustomer(Long customerId) {
         Optional<Customer> customer =
                 Optional.ofNullable(customerRepository.findById(customerId).
                         orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -78,6 +80,15 @@ public class CustomerService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "O nome é obrigatórios " +
                             "e devem ser maiores que 0 (zero)!");
+        }
+    }
+
+    public void encryptPassword(Customer customer) {
+        if (!customerRepository.findById(customer.getIdCustomer()).get().getPasswordCustomer()
+                .equals(customer.getPasswordCustomer())){
+        BCryptPasswordEncoder encrypt = new BCryptPasswordEncoder();
+        String encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
+        customer.setPasswordCustomer(encryptedPassword);
         }
     }
 }

@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -47,8 +49,10 @@ public class Customer {
     @Column(name = "email_customer", nullable = false, length = 300)
     private String emailCustomer;
 
-    @Column(name = "password_customer", nullable = false, length = 3000)
+    @Column(name = "password_customer", nullable = false)
+    @NotNull(message = "Password is required!")
     private String passwordCustomer;
+    //25d55ad283aa400af464c76d713c07ad
 
     @PrePersist
     public void prePersist(){
