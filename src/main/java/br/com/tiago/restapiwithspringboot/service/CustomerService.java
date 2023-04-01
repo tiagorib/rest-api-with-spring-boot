@@ -4,6 +4,7 @@ import br.com.tiago.restapiwithspringboot.entity.Customer;
 import br.com.tiago.restapiwithspringboot.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -23,10 +24,11 @@ public class CustomerService {
 
     public Customer saveCustomer(Customer customer) {
         if (validateCustomer(customer)) {
-            return customerRepository.save(customer);
+            encryptPassword(customer);
+            return customerRepository.saveAndFlush(customer);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Os dados do cliente são obrigatórios!");
+                    "One or more fields are not valid!");
         }
     }
 
@@ -52,6 +54,7 @@ public class CustomerService {
 
         if (validateCustomer(customer)) {
             if(findCustomerById(customer.getIdCustomer()) != null){
+                encryptPassword(customer);
                 return customerRepository.saveAndFlush(customer);
             }else{
                 return null;
@@ -74,6 +77,20 @@ public class CustomerService {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void encryptPassword(Customer customer){
+        if(customer.getIdCustomer() != null){
+            if(!customerRepository.findById(customer.getIdCustomer()).get().getPasswordCustomer().equals(customer.getPasswordCustomer())){
+                BCryptPasswordEncoder encrypt = new BCryptPasswordEncoder();
+                String encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
+                customer.setPasswordCustomer(encryptedPassword);
+            }
+        }else{
+            BCryptPasswordEncoder encrypt = new BCryptPasswordEncoder();
+            String encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
+            customer.setPasswordCustomer(encryptedPassword);
         }
     }
 }

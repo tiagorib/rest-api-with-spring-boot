@@ -2,11 +2,12 @@ package br.com.tiago.restapiwithspringboot.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CPF;
 
-import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -27,7 +28,7 @@ public class Customer {
     @Column(name = "last_name_customer", nullable = false, length = 300)
     private String lastNameCustomer;
 
-    @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}$", message = "CPF inválido")
+    @CPF(message = "CPF inválido")
     @Column(name = "cpf_customer", unique = true, nullable = false, length = 14)
     private String cpfCustomer;
 
@@ -45,7 +46,7 @@ public class Customer {
     @Column(name = "status_customer", nullable = false)
     private Boolean statusCustomer;
 
-    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "E-mail inválido")
+    @Email(message = "Email inválido")
     @Column(name = "email_customer", nullable = false)
     private String emailCustomer;
 

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class CustomerController {
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
     @PostMapping(value = "/create")
-    public ResponseEntity<Object> saveCustomer(@Valid @RequestBody Customer customer) {
+    public ResponseEntity<Object> saveCustomer(@RequestBody Customer customer) {
         Customer result = customerService.saveCustomer(customer);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
@@ -44,7 +43,7 @@ public class CustomerController {
 
 
     @PutMapping(value = "/update")
-    public ResponseEntity<Object> updateCustomer(@Valid @RequestBody Customer customer) {
+    public ResponseEntity<Object> updateCustomer(@RequestBody Customer customer) {
         Customer result = customerService.updateCustomer(customer);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
