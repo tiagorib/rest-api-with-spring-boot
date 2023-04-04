@@ -4,6 +4,7 @@ import br.com.tiago.restapiwithspringboot.entity.Customer;
 import br.com.tiago.restapiwithspringboot.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,10 +21,11 @@ public class CustomerService {
 
     public List<Customer> getInfoCustomers() {
         return customerRepository.findAll();
-    }
+    } // traz uma lista de customer
 
     public Customer saveCustomer(Customer customer) {
-        if (validateCustomer(customer)) {         // se a validação for verdadeira, cadastre!
+        if (validateCustomer(customer)) {      // se a validação for verdadeira, cadastre!
+            encryptPassword(customer);
             return customerRepository.saveAndFlush(customer); // saveandflush confirma o que ele fez, é mais rápido que o método só save
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -53,6 +55,7 @@ public class CustomerService {
         }
 
         if (validateCustomer(customer)) {
+            encryptPassword(customer);
             return customerRepository.saveAndFlush(customer);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mensagem de erro");
@@ -65,14 +68,30 @@ public class CustomerService {
             if (customer.getCpfCustomer() != null &&
                     customer.getFirstNameCustomer() != null &&
                     customer.getLastNameCustomer() != null &&
-                    customer.getEmailCustomer() != null &&
+                    customer.getEmailCustomer() != null &&          // aqui está validando se está tudo preenchido
                     customer.getPasswordCustomer() != null &&
                     customer.getBirthDateCustomer() != null &&
                     customer.getMonthlyIncomeCustomer().compareTo(BigDecimal.valueOf(0)) == 1) {
+
                 return true;
             } else {
                 return false;
             }
         }
 
+        public void encryptPassword(Customer customer) {
+            if  (customer.getIdCustomer() != null) {
+                if (!customerRepository.findById(customer.getIdCustomer()).get().getPasswordCustomer().equals(customer.getPasswordCustomer())) {
+                    BCryptPasswordEncoder encrypt = new BCryptPasswordEncoder();
+                    String encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
+                    customer.setPasswordCustomer(encryptedPassword);
+                }
+            }else {
+                BCryptPasswordEncoder encrypt = new BCryptPasswordEncoder();
+                String encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
+                customer.setPasswordCustomer(encryptedPassword);
+            }
+        }
     }
+
+
