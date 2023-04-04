@@ -3,7 +3,6 @@ package br.com.tiago.restapiwithspringboot.service;
 import br.com.tiago.restapiwithspringboot.entity.Customer;
 import br.com.tiago.restapiwithspringboot.repository.CustomerRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,9 +24,13 @@ public class CustomerService {
     }
 
     public Customer saveCustomer(Customer customer) {
-        return customerRepository.saveAndFlush(customer);
+        if (validateCustomer(customer)) { // se a validação for verdadeira, cadastre!
+            return customerRepository.saveAndFlush(customer); // saveandflush confirma o que ele fez, é mais rápido que o método só save
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "O usuário é obrigatório e deve ser declarado!");
+        }
     }
-
 
     public Boolean validateCustomer(Customer customer) {
         if (customer.getFirstNameCustomer() != null &&
@@ -84,11 +87,14 @@ public class CustomerService {
     }
 
     public void encryptPassword(Customer customer) {
+        if (customer.getIdCustomer() != null){
         if (!customerRepository.findById(customer.getIdCustomer()).get().getPasswordCustomer()
-                .equals(customer.getPasswordCustomer())){
-        BCryptPasswordEncoder encrypt = new BCryptPasswordEncoder();
-        String encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
-        customer.setPasswordCustomer(encryptedPassword);
+                .equals(customer.getPasswordCustomer())) {
+            BCryptPasswordEncoder encrypt = new BCryptPasswordEncoder();
+            String encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
+            customer.setPasswordCustomer(encryptedPassword);
+        }
         }
     }
 }
+
