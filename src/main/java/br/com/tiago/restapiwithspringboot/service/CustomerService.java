@@ -80,16 +80,17 @@ public class CustomerService {
 
     public void encryptPassword(Customer customer){
         BCryptPasswordEncoder encrypt = new BCryptPasswordEncoder();
-        String encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
-
-        if (customer.getIdCustomer() != null) {
+        String encryptedPassword = null;
+        if (customer.getIdCustomer() == null) {
+            encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
+            customer.setPasswordCustomer(encryptedPassword);
+        } else {
             if (!customerRepository.findById(customer.getIdCustomer()).get().getPasswordCustomer()
                     .equals(customer.getPasswordCustomer())) {
+                encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
                 customer.setPasswordCustomer(encryptedPassword);
             }
-        } else {
-            customer.setPasswordCustomer(encryptedPassword);
         }
-    }
 
+    }
 }
