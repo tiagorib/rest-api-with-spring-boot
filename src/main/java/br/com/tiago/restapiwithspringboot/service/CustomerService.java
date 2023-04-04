@@ -4,16 +4,21 @@ import br.com.tiago.restapiwithspringboot.entity.Customer;
 import br.com.tiago.restapiwithspringboot.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CustomerService {
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -24,6 +29,7 @@ public class CustomerService {
 
     public Customer saveCustomer(Customer customer) {
         if (validateCustomer(customer)) {
+            customer.setPasswordCustomer(encoder.encode(customer.getPasswordCustomer()));
             return customerRepository.saveAndFlush(customer);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Favor digitar todos os campos!");
@@ -58,9 +64,10 @@ public class CustomerService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "O ID do customer é obrigatório na atualização!");
         }
-
         if (validateCustomer(customer)) {
+            encryptPassword(customer);
             if (findCustomerById(customer.getIdCustomer()) != null) {
+
                 return customerRepository.saveAndFlush(customer);
             } else {
                 return null;
@@ -83,5 +90,12 @@ public class CustomerService {
                 return false;
             }
         }
+    public void encryptPassword (Customer customer) {
+        Optional<Customer> oldOBJ = customerRepository.findById(customer.getIdCustomer());
+
+        if (!customer.getPasswordCustomer().equals(oldOBJ.get().getPasswordCustomer())) {
+            customer.setPasswordCustomer(encoder.encode(customer.getPasswordCustomer()));
+        }
+    }
     }
 
