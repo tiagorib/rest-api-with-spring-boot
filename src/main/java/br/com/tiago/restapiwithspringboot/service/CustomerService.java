@@ -4,6 +4,8 @@ import br.com.tiago.restapiwithspringboot.entity.Customer;
 import br.com.tiago.restapiwithspringboot.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
@@ -39,15 +41,15 @@ public class CustomerService {
                                 "Cliente não encontrado!")));
 
         customerRepository.delete(customer.get());
-        HashMap<String, Object> result = new  HashMap<String, Object> ();
+        HashMap<String, Object> result = new HashMap<String, Object>();
         result.put("result", "Cliente: " + customer.get().getFirstNameCustomer() + " " +
                 customer.get().getLastNameCustomer() + " excluído com sucesso!");
         return result;
     }
 
-    public Customer findCustomerById(Long idCustomer){
+    public Customer findCustomerById(Long idCustomer) {
         return customerRepository.findById(idCustomer)
-                .orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND,
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Cliente não encontrado!"));
     }
 
@@ -71,7 +73,7 @@ public class CustomerService {
         }
     }
 
-    public Boolean validateCustomer (Customer customer) {
+    public Boolean validateCustomer(Customer customer) {
         if (customer.getCpfCustomer() != null &&
                 customer.getCpfCustomer().matches("[0-9]{11}")) {
             return true;
@@ -79,4 +81,14 @@ public class CustomerService {
             return false;
         }
     }
-}
+        public void encryptPassword(Customer customer){
+        if (!customerRepository.findById(customer.getIdCustomer()).get().getPasswordCustomer().equals(customer.getPasswordCustomer())){
+            BCryptPasswordEncoder encrypt = new BCryptPasswordEncoder();
+            String encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
+            customer.setPasswordCustomer(encryptedPassword);
+        }
+            }
+                }
+
+
+
