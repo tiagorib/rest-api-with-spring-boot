@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="rest-api-with-spring-boot" target="19" />
+      <module name="rest-api-with-spring-boot" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
