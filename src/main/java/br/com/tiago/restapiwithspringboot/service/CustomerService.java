@@ -6,6 +6,7 @@ import br.com.tiago.restapiwithspringboot.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,12 +21,13 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public List<Customer> getInfoCustomers(){
+    public List<Customer> getInfoCustomers() {
         return customerRepository.findAll();
     }
 
     public Customer saveCustomer(Customer customer) {
         if (validateCustomer(customer)) {
+            encryptPassword(customer);
             return customerRepository.save(customer);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome do cliente é obrigatorio");
@@ -36,14 +38,14 @@ public class CustomerService {
         Optional<Customer> customer = Optional.ofNullable(customerRepository.findById(customerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!")));
 
         customerRepository.delete(customer.get());
-        HashMap<String, Object> result = new  HashMap<String, Object> ();
+        HashMap<String, Object> result = new HashMap<String, Object>();
         result.put("result", "Cliente: " + customer.get().getFirstNameCustomer() + " excluído com sucesso!");
         return result;
     }
 
-    public Customer findCustomerById(Long idCustomer){
+    public Customer findCustomerById(Long idCustomer) {
         return customerRepository.findById(idCustomer)
-                .orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
     }
 
     public Customer updateCustomer(Customer customer) {
@@ -52,8 +54,8 @@ public class CustomerService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "O ID do Cliente é obrigatório na atualização!");
         }
 
-        if (validateCustomer(customer)){
-            if (findCustomerById(customer.getIdCustomer()) != null){
+        if (validateCustomer(customer)) {
+            if (findCustomerById(customer.getIdCustomer()) != null) {
                 return customerRepository.saveAndFlush(customer);
             } else {
                 return null;
@@ -68,20 +70,35 @@ public class CustomerService {
 
     }
 
-    public Boolean validateCustomer (Customer customer) {
+    public Boolean validateCustomer(Customer customer) {
         if (customer.getFirstNameCustomer() != null &&
                 customer.getLastNameCustomer() != null &&
                 customer.getCpfCustomer() != null &&
                 customer.getEmailCustomer() != null &&
                 customer.getBirthDateCustomer() != null &&
-                customer.getMonthlyIncomeCustomer() .compareTo(BigDecimal.valueOf(0)) == 1 &&
+                customer.getMonthlyIncomeCustomer().compareTo(BigDecimal.valueOf(0)) == 1 &&
                 customer.getPasswordCustomer() != null &&
-                customer.getStatusCustomer() != null)
-                {
+                customer.getStatusCustomer() != null) {
             return true;
         } else {
             return false;
         }
     }
 
+    public void encryptPassword(Customer customer) {
+        BCryptPasswordEncoder encrypt = new BCryptPasswordEncoder();
+        String encryptedPassword = null;
+        if (customer.getIdCustomer() == null) {
+            encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
+            customer.setPasswordCustomer(encryptedPassword);
+        } else {
+            if (!customerRepository.findById(customer.getIdCustomer()).get().getPasswordCustomer().equals(customer.getPasswordCustomer())) {
+                encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
+                customer.setPasswordCustomer(encryptedPassword);
+            }
+            }
+        }
+
 }
+
+
