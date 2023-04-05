@@ -4,6 +4,7 @@ import br.com.tiago.restapiwithspringboot.entity.Customer;
 import br.com.tiago.restapiwithspringboot.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
@@ -22,6 +23,7 @@ public class CustomerService {
 
     public Customer saveCustomer(Customer customer) {
         if (validateCustomer(customer)) {
+            encryptPassword(customer);
             return customerRepository.saveAndFlush(customer);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Há campos do cliente que estão em branco ou preenchidos de forma incorreta");
@@ -55,6 +57,7 @@ public class CustomerService {
 
         if (validateCustomer(customer)) {
             if (findCustomerById(customer.getIdCustomer()) != null) {
+                encryptPassword(customer);
                 return customerRepository.saveAndFlush(customer);
             } else {
                 return null;
@@ -70,13 +73,25 @@ public class CustomerService {
                 customer.getCpfCustomer() != null &&
                 customer.getBirthdateCustomer() != null &&
                 customer.getMonthlyIncomeCustomer() != null &&
-                customer.getMonthlyIncomeCustomer().compareTo(BigDecimal.valueOf(0)) == 1 &&
+                customer.getMonthlyIncomeCustomer().compareTo(BigDecimal.valueOf(0)) >= 1 &&
                 customer.getStatusCustomer() != null &&
                 customer.getEmailCustomer() != null &&
                 customer.getPasswordCustomer() != null) {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void encryptPassword(Customer customer) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedPassword = encoder.encode(customer.getPasswordCustomer());
+        if(customer.getIdCustomer() != null) {
+            if(!customerRepository.findById(customer.getIdCustomer()).get().getPasswordCustomer().equals(customer.getPasswordCustomer())) {
+                customer.setPasswordCustomer(encodedPassword);
+            }
+        } else {
+            customer.setPasswordCustomer(encodedPassword);
         }
     }
 }
