@@ -1,83 +1,70 @@
 package br.com.tiago.restapiwithspringboot.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.context.annotation.Configuration;
 
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Configuration
 public class Customer {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idCustomer")
+    @Column(name = "id_customer")
     private Long idCustomer;
 
-    @Column(name = "firstNameCustomer", unique = true, nullable = false, length = 50)
+    @Column(name = "first_name_customer", nullable = false, length = 300)
+    @NotBlank(message = "O campo nome é obrigatório!")
+    @Length(min = 2, max = 300, message = "O nome deve ter ao menos dois caracteres!")
     private String firstNameCustomer;
 
-    @Column(name = "lastNameCustomer", unique = true, nullable = false, length = 50)
+    @Column(name = "last_name_customer", nullable = false, length = 300)
     private String lastNameCustomer;
 
-    @CPF
-    @Column(name = "cpfCustomer", unique = true, nullable = false, length = 14)
+    @Column(name = "cpf_customer", unique = true, nullable = false, length = 11)
+    @CPF(message = "O CPF é inválido!")
     private String cpfCustomer;
 
-    @Email
-    @Column(name = "emailCustomer", unique = true, nullable = false, length = 100)
-    private String emailCustomer;
-
-    @Column(name = "passwordCustomer", nullable = false)
-    private String passwordCustomer;
-
+    @Column(name = "birthdate_customer", nullable = false)
     @JsonFormat(pattern = "dd/MM/yyyy")
-    @Column(name = "birthdateCustomer", nullable = false)
     private LocalDate birthdateCustomer;
 
+    @Column(name = "date_created_customer", nullable = false, updatable = false)
     @JsonFormat(pattern = "dd/MM/yyyy")
-    @Column(name = "dateCreatedCustomer", nullable = false, updatable = false)
     private LocalDate dateCreatedCustomer;
 
-    @Column(name = "monthlyIncomeCustomer", nullable = false)
+    @Column(name = "monthly_income_customer", nullable = false, precision = 10, scale = 2)
     private BigDecimal monthlyIncomeCustomer;
 
-    @Column(name = "StatusCustomer", nullable = false, length = 1)
+    @Column(name = "status_customer", nullable = false)
     private String statusCustomer;
 
+    @Column(name = "email_customer", unique = true, nullable = false, length = 300)
+    @Email(message = "O Email informado é inválido!")
+    private String emailCustomer;
+
+    @Column(name = "password_customer", nullable = false, length = 3000)
+    private String passwordCustomer;
+
     @PrePersist
-    public void prePersist() {
-        setDateCreatedCustomer(LocalDate.now());
-        setPasswordCustomer(getPasswordCustomer());
-    }
-
-    public String getPasswordCustomer() {
-        return passwordCustomer;
-    }
-
-    public void setPasswordCustomer(String passwordCustomer) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        this.passwordCustomer = encoder.encode(passwordCustomer);
-    }
-
-    public boolean matchPasswordCustomer(String passwordCustomer) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder.matches(passwordCustomer, this.passwordCustomer);
+    private void prePersist() {
+        this.setDateCreatedCustomer(LocalDate.now());
     }
 
 }
