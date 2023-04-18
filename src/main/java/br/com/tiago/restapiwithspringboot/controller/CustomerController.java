@@ -5,6 +5,7 @@ import br.com.tiago.restapiwithspringboot.entity.Product;
 import br.com.tiago.restapiwithspringboot.exception.ResponseGenericException;
 import br.com.tiago.restapiwithspringboot.service.CustomerService;
 import br.com.tiago.restapiwithspringboot.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +23,13 @@ public class CustomerController {
     private CustomerService customerService;
 
     @GetMapping(value = "/list")
+    @Operation(summary = "List all the customers")
     public ResponseEntity<Object> getInfoCustomers() {
         List<Customer> result = customerService.getInfoCustomers();
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
     @PostMapping(value = "/create")
+    @Operation(summary = "salvar teste")
     public ResponseEntity<Object> saveCustomer(@RequestBody Customer customer) {
         Customer result = customerService.saveCustomer(customer);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
@@ -46,6 +49,7 @@ public class CustomerController {
 
 
     @PutMapping(value = "/update")
+    @Operation(summary = "Lista atualizada")
     public ResponseEntity<Object> updateCustomer(@RequestBody Customer customer) {
         Customer result = customerService.updateCustomer(customer);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
