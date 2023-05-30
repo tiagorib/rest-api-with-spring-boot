@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +47,6 @@ public class CustomerController {
         Optional<Customer> result = customerService.findCustomerById(idCustomer);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
-
 
     @PutMapping(value = "/update")
     @Operation(summary = "This method is used to update a customer")
