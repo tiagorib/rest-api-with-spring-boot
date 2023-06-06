@@ -58,7 +58,11 @@ public class Customer {
     private String passwordCustomer;
 
     @PrePersist
-    public void prePersist(){setDateCreatedCustomer(LocalDate.now());}
+    public void prePersist(){
+        setDateCreatedCustomer(LocalDate.now());
+        setStatusCustomer(true);
+    }
+
 }
 
 
