@@ -30,4 +30,13 @@ public class Product {
     @Column(name = "amount_product", nullable = false, precision = 10, scale = 2)
     private BigDecimal amountProduct;
 
+
+
+    @ManyToOne  //parte principal do relacionamento - toOne
+    @JoinColumn(name="id_category")
+
+    private Category category;
+
+
+
 }
