@@ -1,11 +1,14 @@
 package br.com.tiago.restapiwithspringboot.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Optional;
 
 @Entity
 @AllArgsConstructor
@@ -29,5 +32,13 @@ public class Product {
 
     @Column(name = "amount_product", nullable = false, precision = 10, scale = 2)
     private BigDecimal amountProduct;
+
+    @Column(name = "date_created_product", nullable = false)
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dateCreatedProduct;
+
+    @ManyToOne
+    @JoinColumn(name = "id_category")
+    private Category category;
 
 }

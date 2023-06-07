@@ -1,15 +1,21 @@
 package br.com.tiago.restapiwithspringboot.controller;
 
+import br.com.tiago.restapiwithspringboot.dto.ProductDTO;
+import br.com.tiago.restapiwithspringboot.entity.Category;
 import br.com.tiago.restapiwithspringboot.entity.Product;
 import br.com.tiago.restapiwithspringboot.exception.ResponseGenericException;
+import br.com.tiago.restapiwithspringboot.service.CategoryService;
 import br.com.tiago.restapiwithspringboot.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/v1/product")
@@ -19,6 +25,9 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @GetMapping(value = "/list")
     @Operation(summary = "List all the products")
     public ResponseEntity<Object> getInfoProducts() {
@@ -27,8 +36,8 @@ public class ProductController {
     }
     @PostMapping(value = "/create")
     @Operation(summary = "Saves a new product")
-    public ResponseEntity<Object> saveProduct(@RequestBody Product product) {
-        Product result = productService.saveProduct(product);
+    public ResponseEntity<Object> saveProduct(@RequestBody ProductDTO productDTO) {
+        Product result = productService.saveProduct(productDTO);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
 

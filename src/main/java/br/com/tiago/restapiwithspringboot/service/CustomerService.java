@@ -38,7 +38,7 @@ public class CustomerService {
         Optional<Customer> customer =
                 Optional.ofNullable(customerRepository.findById(idCustomer).
                         orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                "Produto não encontrado!")));
+                                "Cliente não encontrado!")));
 
 
         customerRepository.delete(customer.get());
