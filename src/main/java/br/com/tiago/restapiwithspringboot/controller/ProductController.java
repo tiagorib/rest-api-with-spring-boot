@@ -1,5 +1,6 @@
 package br.com.tiago.restapiwithspringboot.controller;
 
+import br.com.tiago.restapiwithspringboot.dto.ProductDTO;
 import br.com.tiago.restapiwithspringboot.entity.Product;
 import br.com.tiago.restapiwithspringboot.exception.ResponseGenericException;
 import br.com.tiago.restapiwithspringboot.service.ProductService;
@@ -24,7 +25,7 @@ public class ProductController {
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
     @PostMapping(value = "/create")
-    public ResponseEntity<Object> saveProduct(@RequestBody Product product) {
+    public ResponseEntity<Object> saveProduct(@RequestBody ProductDTO product) {
         Product result = productService.saveProduct(product);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
