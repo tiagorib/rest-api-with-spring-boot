@@ -22,37 +22,34 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping(value = "/list")
-    @Operation(summary = "Listar Categories")
+    @Operation(summary = "List all the categories")
     public ResponseEntity<Object> getInfoCategories() {
         List<Category> result = categoryService.getInfoCategories();
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
-
-
     @PostMapping(value = "/create")
-    @Operation(summary = "Salvar Categories")
+    @Operation(summary = "Save a new category")
     public ResponseEntity<Object> saveCategory(@RequestBody Category category) {
         Category result = categoryService.saveCategory(category);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
 
     @DeleteMapping(value = "/delete/{idCategory}")
-    @Operation(summary = "Excluir Categories")
+    @Operation(summary = "Delete an existing category")
     public ResponseEntity<Object> deleteCategory(@PathVariable Long idCategory) {
         HashMap<String, Object> result = categoryService.deleteCategory(idCategory);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
 
     @GetMapping(value = "/findCategory/{idCategory}")
-    @Operation(summary = "Procurar Categoies")
+    @Operation(summary = "Search for a category by ID")
     public ResponseEntity<Object> getCategoryById(@PathVariable Long idCategory){
         Category result = categoryService.findCategoryById(idCategory);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
 
-
     @PutMapping(value = "/update")
-    @Operation(summary = "Atualizar Categoriess")
+    @Operation(summary = "Updates an existing category")
     public ResponseEntity<Object> updateCategory(@RequestBody Category category) {
         Category result = categoryService.updateCategory(category);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
