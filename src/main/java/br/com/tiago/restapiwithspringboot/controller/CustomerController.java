@@ -1,10 +1,8 @@
 package br.com.tiago.restapiwithspringboot.controller;
 
 import br.com.tiago.restapiwithspringboot.entity.Customer;
-import br.com.tiago.restapiwithspringboot.entity.Product;
 import br.com.tiago.restapiwithspringboot.exception.ResponseGenericException;
 import br.com.tiago.restapiwithspringboot.service.CustomerService;
-import br.com.tiago.restapiwithspringboot.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
