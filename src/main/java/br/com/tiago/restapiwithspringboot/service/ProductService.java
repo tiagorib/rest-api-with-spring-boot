@@ -37,6 +37,7 @@ public class ProductService {
     public Product saveProduct(ProductDTO productDTO) {
 
         Product product = new Product();
+        product.setIdProduct(productDTO.getIdProduct());
         product.setNameProduct(productDTO.getNameProduct());
         product.setDescriptionProduct(productDTO.getDescriptionProduct());
 

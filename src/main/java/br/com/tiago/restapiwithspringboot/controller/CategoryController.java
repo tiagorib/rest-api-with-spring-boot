@@ -1,7 +1,6 @@
 package br.com.tiago.restapiwithspringboot.controller;
 
 import br.com.tiago.restapiwithspringboot.entity.Category;
-import br.com.tiago.restapiwithspringboot.entity.Product;
 import br.com.tiago.restapiwithspringboot.exception.ResponseGenericException;
 import br.com.tiago.restapiwithspringboot.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,8 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/category")
-@CrossOrigin(value="*")
-
+@CrossOrigin(value = "*")
 public class CategoryController {
 
     @Autowired
@@ -54,6 +52,5 @@ public class CategoryController {
         Category result = categoryService.updateCategory(category);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
-
 
 }
