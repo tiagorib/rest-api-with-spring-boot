@@ -1,0 +1,20 @@
+<mat-toolbar color="primary" class="mat-elevation-z8">
+    <button routerLink="" mat-icon-button>
+        <mat-icon>home</mat-icon>
+    </button>
+    <span>Fatec Commerce</span>
+    <span class="spacer-menu"></span>
+    <button routerLink="" mat-button>Home</button>
+    <button mat-button [matMenuTriggerFor]="cadastromaster">Formulários</button>
+    <mat-menu #cadastromaster="matMenu">
+        <button routerLink="category" mat-menu-item>Categorias</button>
+        <button routerLink="customer" mat-menu-item>Clientes</button>
+        <button routerLink="product" mat-menu-item>Produtos</button>
+    </mat-menu>
+    <button routerLink="" mat-button>Sobre</button>
+    <button routerLink="" mat-button>Fale Conosco</button>
+    <button mat-raised-button color="accent">Sign Up</button>
+    <button mat-icon-button>
+        <mat-icon>notifications</mat-icon>
+    </button>
+</mat-toolbar>

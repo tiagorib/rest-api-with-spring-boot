@@ -1,0 +1,119 @@
+<mat-toolbar>
+    <span>
+        <mat-icon>shopping_cart</mat-icon>
+        Produtos
+    </span>
+</mat-toolbar>
+<mat-tab-group class="full-width" #tabGroup="matTabGroup">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon>list</mat-icon>
+            Todos
+        </ng-template>
+        <mat-card class="full-width">
+            <table mat-table [dataSource]="dataSource" class="full-width" matTableResponsive >
+                <ng-container matColumnDef="idProduct">
+                  <th mat-header-cell *matHeaderCellDef> ID </th>
+                  <td mat-cell *matCellDef="let product"> {{ product.idProduct }} </td>
+                </ng-container>          
+                <ng-container matColumnDef="nameProduct">
+                  <th mat-header-cell *matHeaderCellDef> Nome </th>
+                  <td mat-cell *matCellDef="let product"> {{ product.nameProduct }} </td>
+                </ng-container>
+                <ng-container matColumnDef="descriptionProduct">
+                    <th mat-header-cell *matHeaderCellDef> Descrição </th>
+                    <td mat-cell *matCellDef="let product"> {{ product.descriptionProduct }} </td>
+                </ng-container>
+                <ng-container matColumnDef="costPriceProduct">
+                    <th mat-header-cell *matHeaderCellDef> Preço de Custo (R$) </th>
+                    <td mat-cell *matCellDef="let product"> {{ product.costPriceProduct | currency: 'BRL' }} </td>
+                </ng-container>
+                <ng-container matColumnDef="amountProduct">
+                    <th mat-header-cell *matHeaderCellDef> Preço Produto (R$) </th>
+                    <td mat-cell *matCellDef="let product"> {{ product.amountProduct | currency: 'BRL' }} </td>
+                </ng-container>
+                <ng-container matColumnDef="dateCreatedProduct">
+                    <th mat-header-cell *matHeaderCellDef> Data de Cadastro </th>
+                    <td mat-cell *matCellDef="let product"> {{ product.dateCreatedProduct }} </td>
+                </ng-container>
+                <ng-container matColumnDef="category">
+                    <th mat-header-cell *matHeaderCellDef> Categoria </th>
+                    <td mat-cell *matCellDef="let product"> {{ product.category.nameCategory }} </td>
+                </ng-container>
+                <ng-container matColumnDef="deleteProduct">
+                    <th mat-header-cell *matHeaderCellDef> Excluir </th>
+                    <td mat-cell *matCellDef="let product">
+                        <a href="#" routerLink="product" (click)="deleteProduct(product)">
+                            <mat-icon>delete-forever</mat-icon>
+                        </a>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="findProduct">
+                    <th mat-header-cell *matHeaderCellDef> Editar </th>
+                    <td mat-cell *matCellDef="let product">
+                        <a href="#" routerLink="product" (click)="tabGroup.selectedIndex=1;findProduct(product);">
+                            <mat-icon>mode_edit</mat-icon>
+                        </a>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+              <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons></mat-paginator>
+        </mat-card>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon>shopping_cart</mat-icon>
+            Novo
+        </ng-template>
+        <mat-card class="full-width">
+            <mat-card-title>Cadastro</mat-card-title>
+            <form #productForm="ngForm" (ngSubmit)="saveProduct()">
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label> Nome: </mat-label>
+                        <input [(ngModel)]="productDTO.nameProduct" type="text" matInput name="nameProduct"
+                            placeholder="Digite o nome do produto" required />
+                    </mat-form-field>
+                    <mat-form-field class="full-width">
+                        <mat-label>Descrição: </mat-label>
+                        <input [(ngModel)]="productDTO.descriptionProduct" type="text" matInput name="descriptionProduct"
+                            placeholder="Digite a descrição do produto" required />
+                    </mat-form-field> 
+                    <mat-form-field class="full-width">
+                        <mat-label>Preço de Custo: R$ </mat-label>
+                        <input [(ngModel)]="productDTO.costPriceProduct" type="number" matInput
+                            name="costPriceProduct" placeholder="Digite o preço de custo (R$)" required />
+                    </mat-form-field>
+                    <mat-form-field class="full-width">
+                        <mat-label>Preço de Venda: R$ </mat-label>
+                        <input [(ngModel)]="productDTO.amountProduct" type="number" matInput
+                            name="amountProduct" placeholder="Digite o preço do produto (R$)" required />
+                    </mat-form-field>                   
+                    <mat-form-field class="full-width">
+                        <mat-label>Data de Cadastro: </mat-label>
+                        <input [(ngModel)]="productDTO.dateCreatedProduct" type="date" matInput name="dateCreatedProduct"
+                            placeholder="Digite a data de cadastro do produto" required />
+                    </mat-form-field>
+                    <mat-form-field class="full-width">
+                        <mat-label>Categoria: </mat-label>
+                        <mat-select [(ngModel)]="productDTO.idCategory" name="category">
+                            <mat-option *ngFor="let category of categories" [value]="category.idCategory">
+                              {{ category.nameCategory }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button type="submit" mat-raised-button color="primary">Salvar</button>
+                </div>
+                <br />
+                <div role="alert" *ngIf="success == true">
+                    <span>Produto {{ product.nameProduct }} cadastrado com sucesso!</span>
+                </div>
+                <div role="alert" *ngFor="let error of errors">
+                    <span>{{ error }}</span>
+                </div>
+            </form>
+        </mat-card>
+    </mat-tab>
+</mat-tab-group>
