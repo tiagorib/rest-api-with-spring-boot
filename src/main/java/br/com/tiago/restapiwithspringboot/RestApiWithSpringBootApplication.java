@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@OpenAPIDefinition(info = @Info(title = "Sales API", description = "REST API") )
+@OpenAPIDefinition(info = @Info(title = "Rest API Fatec", description = "Rest API Fatec SpringBoot"))
 public class RestApiWithSpringBootApplication {
 
 	public static void main(String[] args) {

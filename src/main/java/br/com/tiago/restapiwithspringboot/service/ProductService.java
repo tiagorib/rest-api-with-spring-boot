@@ -37,6 +37,7 @@ public class ProductService {
     public Product saveProduct(ProductDTO productDTO) {
 
         Product product = new Product();
+        product.setIdProduct(productDTO.getIdProduct());
         product.setNameProduct(productDTO.getNameProduct());
         product.setDescriptionProduct(productDTO.getDescriptionProduct());
 
@@ -92,7 +93,7 @@ public class ProductService {
             }
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-            "O preço de custo e preço de venda do produto são obrigatórios " +
+                "O preço de custo e preço de venda do produto são obrigatórios " +
                 "e devem ser maiores que 0 (zero)!");
         }
     }
