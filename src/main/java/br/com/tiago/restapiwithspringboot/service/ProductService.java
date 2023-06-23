@@ -1,7 +1,6 @@
 package br.com.tiago.restapiwithspringboot.service;
 
 import br.com.tiago.restapiwithspringboot.dto.ProductDTO;
-import br.com.tiago.restapiwithspringboot.entity.Category;
 import br.com.tiago.restapiwithspringboot.entity.Product;
 import br.com.tiago.restapiwithspringboot.repository.ProductRepository;
 import br.com.tiago.restapiwithspringboot.util.ConverterData;
@@ -25,10 +24,10 @@ public class ProductService {
     private ProductRepository productRepository;
 
     @Autowired
-    private ConverterData converterData;
+    private CategoryService categoryService;
 
     @Autowired
-    private CategoryService categoryService;
+    private ConverterData converterData;
 
     public List<Product> getInfoProducts() {
         return productRepository.findAll();
@@ -43,12 +42,16 @@ public class ProductService {
         product.setCostPriceProduct(converterData.convertingStringToBigDecimal(productDTO.getCostPriceProduct()));
         product.setAmountProduct(converterData.convertingStringToBigDecimal(productDTO.getAmountProduct()));
 
-        LocalDate dateCreatedProduct = LocalDate.parse(productDTO.getDateCreatedProduct(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        product.setDateCreatedProduct(dateCreatedProduct);
+        String dateCreatedProductValue = productDTO.getDateCreatedProduct();
+        if (dateCreatedProductValue != null) {
+            LocalDate dateCreatedProduct = LocalDate.parse(dateCreatedProductValue, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            product.setDateCreatedProduct(dateCreatedProduct);
+        } else {
+            // Trate a ausência da data de acordo com seus requisitos
+        }
 
         Long idCategory = productDTO.getIdCategory();
         product.setCategory(categoryService.findCategoryById(idCategory));
-
 
         if (validateProduct(product)) {
             return productRepository.saveAndFlush(product);
@@ -66,14 +69,14 @@ public class ProductService {
                                 "Produto não encontrado!")));
 
         productRepository.delete(product.get());
-        HashMap<String, Object> result = new  HashMap<String, Object> ();
+        HashMap<String, Object> result = new HashMap<String, Object>();
         result.put("result", "Produto: " + product.get().getNameProduct() + " excluído com sucesso!");
         return result;
     }
 
-    public Product findProductById(Long idProduct){
+    public Product findProductById(Long idProduct) {
         return productRepository.findById(idProduct)
-                .orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND,
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Produto não encontrado!"));
     }
 
@@ -92,21 +95,20 @@ public class ProductService {
             }
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-            "O preço de custo e preço de venda do produto são obrigatórios " +
-                "e devem ser maiores que 0 (zero)!");
+                    "O preço de custo e preço de venda do produto são obrigatórios " +
+                            "e devem ser maiores que 0 (zero)!");
         }
     }
 
-    public Boolean validateProduct (Product product) {
+    public Boolean validateProduct(Product product) {
         if (product.getAmountProduct() != null &&
-                product.getAmountProduct().compareTo(BigDecimal.valueOf(0)) == 1 &&
+                product.getAmountProduct().compareTo(BigDecimal.ZERO) > 0 &&
                 product.getCostPriceProduct() != null &&
-                product.getCostPriceProduct().compareTo(BigDecimal.valueOf(0)) == 1 &&
+                product.getCostPriceProduct().compareTo(BigDecimal.ZERO) > 0 &&
                 product.getCategory() != null) {
             return true;
         } else {
             return false;
         }
     }
-
 }

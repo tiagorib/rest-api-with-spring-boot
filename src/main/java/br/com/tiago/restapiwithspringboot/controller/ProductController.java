@@ -1,7 +1,6 @@
 package br.com.tiago.restapiwithspringboot.controller;
 
 import br.com.tiago.restapiwithspringboot.dto.ProductDTO;
-import br.com.tiago.restapiwithspringboot.entity.Category;
 import br.com.tiago.restapiwithspringboot.entity.Product;
 import br.com.tiago.restapiwithspringboot.exception.ResponseGenericException;
 import br.com.tiago.restapiwithspringboot.service.CategoryService;
@@ -11,11 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/v1/product")
@@ -32,8 +28,10 @@ public class ProductController {
     @Operation(summary = "List all the products")
     public ResponseEntity<Object> getInfoProducts() {
         List<Product> result = productService.getInfoProducts();
+        var test = result.get(0);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
+
     @PostMapping(value = "/create")
     @Operation(summary = "Saves a new product")
     public ResponseEntity<Object> saveProduct(@RequestBody ProductDTO productDTO) {
@@ -50,11 +48,10 @@ public class ProductController {
 
     @GetMapping(value = "/findProduct/{idProduct}")
     @Operation(summary = "Search for a product by ID")
-    public ResponseEntity<Object> getProductById(@PathVariable Long idProduct){
+    public ResponseEntity<Object> getProductById(@PathVariable Long idProduct) {
         Product result = productService.findProductById(idProduct);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
-
 
     @PutMapping(value = "/update")
     @Operation(summary = "Updates an existing product")
@@ -62,5 +59,4 @@ public class ProductController {
         Product result = productService.updateProduct(product);
         return ResponseEntity.ok().body(ResponseGenericException.response(result));
     }
-
 }

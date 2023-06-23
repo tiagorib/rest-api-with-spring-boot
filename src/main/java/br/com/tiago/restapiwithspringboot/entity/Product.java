@@ -1,21 +1,22 @@
 package br.com.tiago.restapiwithspringboot.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.sql.ast.tree.from.MappedByTableGroup;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_product")
@@ -32,13 +33,17 @@ public class Product {
 
     @Column(name = "amount_product", nullable = false, precision = 10, scale = 2)
     private BigDecimal amountProduct;
-
     @Column(name = "date_created_product", nullable = false)
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateCreatedProduct;
 
     @ManyToOne
-    @JoinColumn(name = "id_category")
+    @JoinColumn(name="id_category", nullable=false)
+    @JsonBackReference
     private Category category;
 
+    @PrePersist
+    private void prePersist() {
+        this.setDateCreatedProduct(LocalDate.now());
+    }
 }

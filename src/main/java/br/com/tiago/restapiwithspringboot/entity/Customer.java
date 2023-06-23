@@ -1,5 +1,6 @@
 package br.com.tiago.restapiwithspringboot.entity;
 
+import br.com.tiago.restapiwithspringboot.service.CustomerService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -12,7 +13,6 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,7 +36,7 @@ public class Customer {
     @CPF(message = "O CPF é inválido!")
     private String cpfCustomer;
 
-    @Column(name = "birthdate_customer", nullable = false)
+    @Column(name = "birth_date_customer", nullable = true)
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate birthdateCustomer;
 
@@ -60,7 +60,6 @@ public class Customer {
     @PrePersist
     private void prePersist() {
         this.setDateCreatedCustomer(LocalDate.now());
-        this.setStatusCustomer(true);
     }
 
 }

@@ -4,10 +4,21 @@ import br.com.tiago.restapiwithspringboot.entity.Customer;
 import br.com.tiago.restapiwithspringboot.exception.ResponseGenericException;
 import br.com.tiago.restapiwithspringboot.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
 
+
+import java.lang.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -55,3 +66,5 @@ public class CustomerController {
     }
 
 }
+
+

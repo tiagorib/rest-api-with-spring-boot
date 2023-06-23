@@ -1,5 +1,6 @@
 package br.com.tiago.restapiwithspringboot.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -14,18 +15,21 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class Category {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_category")
     private Long idCategory;
 
-    @Column(name = "name_category", nullable = false, length = 300, unique = true)
+    @Column(name = "name_category", nullable = false, length = 300)
     @NotBlank(message = "O campo nome é obrigatório!")
     @Length(min = 2, max = 300, message = "O nome deve ter ao menos dois caracteres!")
     private String nameCategory;
 
-    @Column(name = "description_category", length = 1000)
+    @Column(name = "description_category", nullable = false, length = 1000)
     private String descriptionCategory;
+
+    @OneToMany(mappedBy="category")
+    @JsonBackReference
+    private List<Product> products;
 
 }

@@ -2,13 +2,26 @@ package br.com.tiago.restapiwithspringboot.service;
 
 import br.com.tiago.restapiwithspringboot.entity.Customer;
 import br.com.tiago.restapiwithspringboot.repository.CustomerRepository;
+import jakarta.validation.Constraint;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.Payload;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
 
+import java.lang.annotation.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +33,7 @@ public class CustomerService {
     private CustomerRepository customerRepository;
 
     public List<Customer> getInfoCustomers() {
+
         return customerRepository.findAll();
     }
 
@@ -28,9 +42,7 @@ public class CustomerService {
             encryptPassword(customer);
             return customerRepository.saveAndFlush(customer);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "O preço de venda do produto é " +
-                            "obrigatório e deve ser maior que 0 (zero)!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Algum campo obrigatório está faltando ou inválido!");
         }
     }
 
@@ -38,7 +50,7 @@ public class CustomerService {
         Optional<Customer> customer =
                 Optional.ofNullable(customerRepository.findById(idCustomer).
                         orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                "Cliente não encontrado!")));
+                                "Produto não encontrado!")));
 
 
         customerRepository.delete(customer.get());
@@ -94,3 +106,4 @@ public class CustomerService {
 
     }
 }
+
